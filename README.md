@@ -1,4 +1,4 @@
-Simple encryption tool that can encrypt and decrypt files. 
+Simple CLI encryption tool written in python that can encrypt and decrypt files. 
 
 Installation:  
 git clone https://github.com/hmMythreya/nCrypt  
