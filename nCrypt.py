@@ -12,6 +12,7 @@ from random import choices
 from string import ascii_letters
 from string import digits
 from argparse import ArgumentParser
+import sys
 
 # Defining global variables
 colorInit = False
@@ -147,17 +148,15 @@ if __name__ == "__main__":
             description = "CLI tool to encrypt and decrypt files, written in python",
             epilog = "Thanks for using nCrypt. check https://github.com/hmMythreya/nCrypt")
     
-    parser.add_argument("--cli", action="store_true")
-    args = parser.parse_args()
-    if(args.cli):
+    if(len(sys.argv)==1):
         exitFlag = True
         while exitFlag:
             exitFlag = main()
     else:
-        parser.add_argument("--mode", action="store", metavar="Used to set encrypt mode or decrypt mode. e | enc | encrypt or d | dec | decrypt")
-        parser.add_argument("--input", action="store", metavar="Path to file to be encrypted or decrypted", nargs=1)
-        parser.add_argument("--output", action="store", metavar="Path to destination file for storing encrypted or decrypted data", nargs=1)
-        parser.add_argument("--key", action="store", matavar="Use this to enter your own key. Program will generate it's own and output to stdout if this is not specified", nargs="?")
-
+        parser.add_argument("--mode", action="store", required=True, metavar="Used to set encrypt mode or decrypt mode. e | enc | encrypt or d | dec | decrypt")
+        parser.add_argument("--input", action="store", required=True, metavar="Path to file to be encrypted or decrypted", nargs=1)
+        parser.add_argument("--output", action="store", required=True, metavar="Path to destination file for storing encrypted or decrypted data", nargs=1)
+        parser.add_argument("--key", action="store", required=True, metavar="Use this to enter your own key. Program will generate it's own and output to stdout if this is not specified", nargs="?")
+        
 
 
