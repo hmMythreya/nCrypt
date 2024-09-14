@@ -11,6 +11,7 @@ from base64 import urlsafe_b64encode
 from random import choices
 from string import ascii_letters
 from string import digits
+from argparse import ArgumentParser
 
 # Defining global variables
 colorInit = False
@@ -141,6 +142,22 @@ def main():
             return True
 
 if __name__ == "__main__":
-    exitFlag = True
-    while exitFlag:
-        exitFlag = main()
+    parser = ArgumentParser(
+            prog = "python3 nCrypt.py",
+            description = "CLI tool to encrypt and decrypt files, written in python",
+            epilog = "Thanks for using nCrypt. check https://github.com/hmMythreya/nCrypt")
+    
+    parser.add_argument("--cli", action="store_true")
+    args = parser.parse_args()
+    if(args.cli):
+        exitFlag = True
+        while exitFlag:
+            exitFlag = main()
+    else:
+        parser.add_argument("--mode", action="store", metavar="Used to set encrypt mode or decrypt mode. e | enc | encrypt or d | dec | decrypt")
+        parser.add_argument("--input", action="store", metavar="Path to file to be encrypted or decrypted", nargs=1)
+        parser.add_argument("--output", action="store", metavar="Path to destination file for storing encrypted or decrypted data", nargs=1)
+        parser.add_argument("--key", action="store", matavar="Use this to enter your own key. Program will generate it's own and output to stdout if this is not specified", nargs="?")
+
+
+
