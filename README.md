@@ -5,8 +5,8 @@ git clone https://github.com/hmMythreya/nCrypt
 cd nCrypt  
 pip install -r requirements.txt  
 
-To run:
+To run:  
 python3 nCrypt.py
 
-Usage:
+Usage:  
 Follow the onscreen text to use the tool.
