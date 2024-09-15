@@ -1,14 +1,19 @@
-Simple CLI encryption tool written in python that can encrypt and decrypt files. 
+# Simple CLI encryption tool written in python that can encrypt and decrypt files. 
 
-Installation:  
+# Installation:  
+
 git clone https://github.com/hmMythreya/nCrypt  
+
 cd nCrypt  
+
 pip install -r requirements.txt  
 
-To run:  
+# To run:  
+
 python3 nCrypt.py
 
-Usage:  
+# Usage:  
+
 python3 nCrypt.py by default enters into interactive mode. Follow the instructions
 In order to use this tool without interactive mode, you need to pass in command line arguments
 
