@@ -17,6 +17,7 @@ import sys
 # Defining global variables
 colorInit = False
 colorReset = Style.RESET_ALL
+isInteractiveMode = True
 
 # Defining Custom Exception
 class fileErr(Exception):
@@ -24,10 +25,13 @@ class fileErr(Exception):
 
 # Defining a function that will print colored or non colored text to stdout (terminal). Takes in 2 lists, messageList that contains message
 def terminalPrinter(messageList, colorList):
-    
     global colorInit
     global colorReset
-    
+    global isInteractiveMode
+
+    if (not isInteractiveMode):
+        return
+
     if(colorInit):
         colorama_reinit()
     else:
@@ -41,7 +45,6 @@ def terminalPrinter(messageList, colorList):
         for message,color in zip(messageList, colorList):
             print(f"{color}{message}{colorReset}",end="")
 
-    
     colorama_deinit()
 
 # Defining a function to read the file that the user provides
@@ -69,10 +72,11 @@ def keyGen(keyIn):
     return Fernet(enc)
 
 # Function for encryption and decryption
-def encryptAndDecrypt(call, content):
+def encryptAndDecrypt(call, content, key=None):
+    global isInteractiveMode
     if(call == "e"):
         flag = True
-        while flag:
+        while flag and isInteractiveMode:
             terminalPrinter(["Would you like to generate a ","key ","or use your own? ", "[G]","enerate ","[O]","wn: "],[Fore.WHITE, Fore.GREEN, Fore.WHITE, Fore.RED, Fore.WHITE, Fore.RED, Fore.WHITE])
             choice = input().lower()
             if choice == "g":
@@ -85,6 +89,9 @@ def encryptAndDecrypt(call, content):
                 terminalPrinter(["Please enter a valid choice between ","O ","for entering your own key or ", "G ", "for generating a key\n"],[Fore.WHITE, Fore.RED, Fore.WHITE, Fore.RED, Fore.WHITE])
                 continue
 
+        if(not key):
+            key = "".join(choices(ascii_letters+digits,k=32))
+        
         fernet = keyGen(key)
         terminalPrinter(["Key used to encrypt: ",f"{key}\n"],[Fore.WHITE, Fore.GREEN])
         encrypted = fernet.encrypt(content)
@@ -93,7 +100,12 @@ def encryptAndDecrypt(call, content):
 
     else:
         terminalPrinter("Enter the key to be used for decryption: ", Fore.WHITE)
-        keyIn = input()
+        
+        if(isInteractiveMode):
+            keyIn = input()
+        elif(not key):
+            key = "".join(choices(ascii_letters+digits,k=32))
+        
         fernet = keyGen(keyIn)
         decrypted = fernet.decrypt(content)
 
@@ -153,10 +165,23 @@ if __name__ == "__main__":
         while exitFlag:
             exitFlag = main()
     else:
-        parser.add_argument("--mode", action="store", required=True, metavar="Used to set encrypt mode or decrypt mode. e | enc | encrypt or d | dec | decrypt")
-        parser.add_argument("--input", action="store", required=True, metavar="Path to file to be encrypted or decrypted", nargs=1)
-        parser.add_argument("--output", action="store", required=True, metavar="Path to destination file for storing encrypted or decrypted data", nargs=1)
+        global isInteractiveMode
+        isInteractiveMode = False
+        parser.add_argument("--mode", choices=["e","enc","encrypt","d","dec","decrypt"],type=str, action="store", required=True, metavar="Used to set encrypt mode or decrypt mode. e | enc | encrypt or d | dec | decrypt")
+        parser.add_argument("--input", type=str, action="store", required=True, metavar="Path to file to be encrypted or decrypted", nargs=1)
+        parser.add_argument("--output", type=str, action="store", required=True, metavar="Path to destination file for storing encrypted or decrypted data", nargs=1)
         parser.add_argument("--key", action="store", required=True, metavar="Use this to enter your own key. Program will generate it's own and output to stdout if this is not specified", nargs="?")
+
+        if(parser.mode.lower() in ["e","enc","encrypt"]):
+            call = "e"
+        else:
+            call = "d"
         
-
-
+        try:
+            out = encryptAndDecrypt(call, readFile(parser.input), key)
+            writeFile(out, parser.output)
+        except fileErr:
+            print("Error Reading file. Exiting")
+        except Exception:
+            raise Exception
+        
