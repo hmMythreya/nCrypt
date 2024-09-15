@@ -20,7 +20,11 @@ In order to use this tool without interactive mode, you need to pass in command 
 python3 nCrypt.py \[--help | -h] prints the help page
 
 The tool takes in 4 arguments:
+
   --mode : Encryption mode or Decryption mode
+
   --input : path to inmput file
+  
   --output : path to output file (WARNING: WILL OVERWRITE OUTPUT FILE COMPLETELY, BE CAREFUL)
+  
   --key : enter the key to be used for encryption/decryption
