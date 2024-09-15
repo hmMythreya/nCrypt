@@ -165,7 +165,6 @@ if __name__ == "__main__":
         while exitFlag:
             exitFlag = main()
     else:
-        global isInteractiveMode
         isInteractiveMode = False
         parser.add_argument("--mode", choices=["e","enc","encrypt","d","dec","decrypt"],type=str, action="store", required=True, metavar="Used to set encrypt mode or decrypt mode. e | enc | encrypt or d | dec | decrypt")
         parser.add_argument("--input", type=str, action="store", required=True, metavar="Path to file to be encrypted or decrypted", nargs=1)
