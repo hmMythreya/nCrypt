@@ -14,7 +14,8 @@ python3 nCrypt.py
 
 # Usage:  
 
-python3 nCrypt.py by default enters into interactive mode. Follow the instructions
+python3 nCrypt.py by default enters into interactive mode, follow the instructions shown on screen.
+
 In order to use this tool without interactive mode, you need to pass in command line arguments
 
 python3 nCrypt.py \[--help | -h] prints the help page
