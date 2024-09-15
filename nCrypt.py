@@ -24,12 +24,12 @@ class fileErr(Exception):
     pass
 
 # Defining a function that will print colored or non colored text to stdout (terminal). Takes in 2 lists, messageList that contains message
-def terminalPrinter(messageList, colorList):
+def terminalPrinter(messageList, colorList, overrideInteractiveMode=False):
     global colorInit
     global colorReset
     global isInteractiveMode
 
-    if (not isInteractiveMode):
+    if (not isInteractiveMode and not overrideInteractiveMode):
         return
 
     if(colorInit):
@@ -91,7 +91,8 @@ def encryptAndDecrypt(call, content, key=None):
 
         if(not key):
             key = "".join(choices(ascii_letters+digits,k=32))
-        
+            terminalPrinter(["Key used to encrypt: ",f"{key}\n"],[Fore.WHITE, Fore.GREEN],True)
+
         fernet = keyGen(key)
         terminalPrinter(["Key used to encrypt: ",f"{key}\n"],[Fore.WHITE, Fore.GREEN])
         encrypted = fernet.encrypt(content)
@@ -99,14 +100,11 @@ def encryptAndDecrypt(call, content, key=None):
         return encrypted
 
     else:
-        terminalPrinter("Enter the key to be used for decryption: ", Fore.WHITE)
+        if(not key):
+            print("Enter the key to be used for decryption: ")
+            key = input()
         
-        if(isInteractiveMode):
-            keyIn = input()
-        elif(not key):
-            key = "".join(choices(ascii_letters+digits,k=32))
-        
-        fernet = keyGen(keyIn)
+        fernet = keyGen(key)
         decrypted = fernet.decrypt(content)
 
         return decrypted
@@ -169,18 +167,17 @@ if __name__ == "__main__":
         parser.add_argument("--mode", choices=["e","enc","encrypt","d","dec","decrypt"],type=str, action="store", required=True, metavar="Used to set encrypt mode or decrypt mode. e | enc | encrypt or d | dec | decrypt")
         parser.add_argument("--input", type=str, action="store", required=True, metavar="Path to file to be encrypted or decrypted", nargs=1)
         parser.add_argument("--output", type=str, action="store", required=True, metavar="Path to destination file for storing encrypted or decrypted data", nargs=1)
-        parser.add_argument("--key", action="store", required=True, metavar="Use this to enter your own key. Program will generate it's own and output to stdout if this is not specified", nargs="?")
-
-        if(parser.mode.lower() in ["e","enc","encrypt"]):
+        parser.add_argument("--key", action="store", required=False, metavar="Use this to enter your own key. Program will generate it's own and output to stdout if this is not specified", nargs="?")
+        args = parser.parse_args()
+        
+        if(args.mode.lower() in ["e","enc","encrypt"]):
             call = "e"
         else:
             call = "d"
         
         try:
-            out = encryptAndDecrypt(call, readFile(parser.input), key)
-            writeFile(out, parser.output)
-        except fileErr:
-            print("Error Reading file. Exiting")
+            out = encryptAndDecrypt(call, readFile(args.input[0]), args.key)
+            writeFile(out, args.output[0])
         except Exception:
             raise Exception
         
