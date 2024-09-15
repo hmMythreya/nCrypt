@@ -23,7 +23,7 @@ The tool takes in 4 arguments:
 
   --mode : Encryption mode or Decryption mode
 
-  --input : path to inmput file
+  --input : path to input file
   
   --output : path to output file (WARNING: WILL OVERWRITE OUTPUT FILE COMPLETELY, BE CAREFUL)
   
