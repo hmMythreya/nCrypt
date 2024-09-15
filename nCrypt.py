@@ -169,10 +169,10 @@ if __name__ == "__main__":
             exitFlag = main()
     else:
         isInteractiveMode = False
-        parser.add_argument("mode","-m","--mode", choices=["e","enc","encrypt","d","dec","decrypt"],type=str, action="store", required=True, metavar="Used to set encrypt mode or decrypt mode. e | enc | encrypt or d | dec | decrypt")
-        parser.add_argument("input","-i","--input", type=str, action="store", required=True, metavar="Path to file to be encrypted or decrypted", nargs=1)
-        parser.add_argument("output","-o","--output", type=str, action="store", required=True, metavar="Path to destination file for storing encrypted or decrypted data", nargs=1)
-        parser.add_argument("key","-k","--key", action="store", required=False, metavar="Use this to enter your own key. Program will generate it's own and output to stdout if this is not specified", nargs="?")
+        parser.add_argument("-m","--mode", choices=["e","enc","encrypt","d","dec","decrypt"],type=str, action="store", required=True, metavar="Used to set encrypt mode or decrypt mode. e | enc | encrypt or d | dec | decrypt")
+        parser.add_argument("-i","--input", type=str, action="store", required=True, metavar="Path to file to be encrypted or decrypted", nargs=1)
+        parser.add_argument("-o","--output", type=str, action="store", required=True, metavar="Path to destination file for storing encrypted or decrypted data", nargs=1)
+        parser.add_argument("-k","--key", action="store", required=False, metavar="Use this to enter your own key. Program will generate it's own and output to stdout if this is not specified", nargs="?")
         args = parser.parse_args()
         
         if(args.mode.lower() in ["e","enc","encrypt"]):
