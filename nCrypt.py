@@ -1,5 +1,6 @@
 # Importing modules that we will use. cryptography module is the go-to for encryption. Colorama is a cross-platform python module that will give color output to terminal
 from cryptography.fernet import Fernet
+from cryptography.fernet import InvalidToken
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from colorama import init as colorama_init
@@ -105,8 +106,12 @@ def encryptAndDecrypt(call, content, key=None):
             key = input()
         
         fernet = keyGen(key)
-        decrypted = fernet.decrypt(content)
-
+        try:
+            decrypted = fernet.decrypt(content)
+        except InvalidToken:
+            print("The key you have entered to decrypt is wrong. Exiting...")
+            exit()
+        
         return decrypted
 
 def main():
